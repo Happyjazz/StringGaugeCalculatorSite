@@ -12,8 +12,14 @@ public partial class StringCalc : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        populateFrequencyDropdowns();
+        if (!IsPostBack)
+        {
+            populateFrequencyDropdowns();
+        }
+        
     }
+
+    #region Actions
     protected void buttonCalculate_Click(object sender, EventArgs e)
     {
         float frequency = (float)Convert.ToDouble(txtStringFreq6.Text);
@@ -24,6 +30,82 @@ public partial class StringCalc : System.Web.UI.Page
 
         txtUnitWeight6.Text = Convert.ToString(unitWeight);
     }
+    protected void ddString6_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToDouble(ddString6.SelectedValue) == 0)
+        {
+            txtStringFreq6.Enabled = true;
+        }
+        else
+        {
+            txtStringFreq6.Enabled = false;
+        }
+        txtStringFreq6.Text = Convert.ToString(ddString6.SelectedItem.Value);
+    }
+    protected void ddString5_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToDouble(ddString5.SelectedValue) == 0)
+        {
+            txtStringFreq5.Enabled = true;
+        }
+        else
+        {
+            txtStringFreq5.Enabled = false;
+        }
+        txtStringFreq5.Text = Convert.ToString(ddString5.SelectedItem.Value);
+    }
+    protected void ddString4_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToDouble(ddString4.SelectedValue) == 0)
+        {
+            txtStringFreq4.Enabled = true;
+        }
+        else
+        {
+            txtStringFreq4.Enabled = false;
+        }
+        txtStringFreq4.Text = ddString4.SelectedValue;
+    }
+    protected void ddString3_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToDouble(ddString3.SelectedValue) == 0)
+        {
+            txtStringFreq3.Enabled = true;
+        }
+        else
+        {
+            txtStringFreq3.Enabled = false;
+        }
+        txtStringFreq3.Text = ddString3.SelectedValue;
+    }
+    protected void ddString2_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToDouble(ddString2.SelectedValue) == 0)
+        {
+            txtStringFreq2.Enabled = true;
+        }
+        else
+        {
+            txtStringFreq2.Enabled = false;
+        }
+        txtStringFreq2.Text = ddString2.SelectedValue;
+    }
+    protected void ddString1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToDouble(ddString1.SelectedValue) == 0)
+        {
+            txtStringFreq1.Enabled = true;
+        }
+        else
+        {
+            txtStringFreq1.Enabled = false;
+        }
+        txtStringFreq1.Text = ddString1.SelectedValue;
+    }
+    #endregion
+
+
+    #region Private Methods
     //This methods calculates the Unit Weight from the values entered into Frequency, Tension and Scale
     float CalculateUnitWeight(float frequency, float tension, float scale)
     {
@@ -36,6 +118,7 @@ public partial class StringCalc : System.Web.UI.Page
         _frequenciesTable.Columns.Add("Note");
         _frequenciesTable.Columns.Add("Frequency");
 
+        _frequenciesTable.Rows.Add("Custom", "0");
         _frequenciesTable.Rows.Add("16,35 Hz \tC0", "16,35");
         _frequenciesTable.Rows.Add("17,32 Hz \tC#0/Db0 ", "17,32");
         _frequenciesTable.Rows.Add("18,35 Hz \tD0", "18,35");
@@ -150,6 +233,7 @@ public partial class StringCalc : System.Web.UI.Page
         ddString6.DataValueField = "Frequency";
         ddString6.DataBind();
         ddString6.SelectedValue = "30,87";
+        txtStringFreq6.Enabled = false;
         txtStringFreq6.Text = ddString6.SelectedValue;
 
         ddString5.DataSource = _frequenciesTable;
@@ -157,6 +241,7 @@ public partial class StringCalc : System.Web.UI.Page
         ddString5.DataValueField = "Frequency";
         ddString5.DataBind();
         ddString5.SelectedValue = "41,2";
+        txtStringFreq5.Enabled = false;
         txtStringFreq5.Text = ddString5.SelectedValue;
 
         ddString4.DataSource = _frequenciesTable;
@@ -164,6 +249,7 @@ public partial class StringCalc : System.Web.UI.Page
         ddString4.DataValueField = "Frequency";
         ddString4.DataBind();
         ddString4.SelectedValue = "55";
+        txtStringFreq4.Enabled = false;
         txtStringFreq4.Text = ddString4.SelectedValue;
 
         ddString3.DataSource = _frequenciesTable;
@@ -171,6 +257,7 @@ public partial class StringCalc : System.Web.UI.Page
         ddString3.DataValueField = "Frequency";
         ddString3.DataBind();
         ddString3.SelectedValue = "73,42";
+        txtStringFreq3.Enabled = false;
         txtStringFreq3.Text = ddString3.SelectedValue;
 
         ddString2.DataSource = _frequenciesTable;
@@ -178,6 +265,7 @@ public partial class StringCalc : System.Web.UI.Page
         ddString2.DataValueField = "Frequency";
         ddString2.DataBind();
         ddString2.SelectedValue = "98";
+        txtStringFreq2.Enabled = false;
         txtStringFreq2.Text = ddString2.SelectedValue;
 
         ddString1.DataSource = _frequenciesTable;
@@ -185,7 +273,11 @@ public partial class StringCalc : System.Web.UI.Page
         ddString1.DataValueField = "Frequency";
         ddString1.DataBind();
         ddString1.SelectedValue = "130,81";
+        txtStringFreq1.Enabled = false;
         txtStringFreq1.Text = ddString1.SelectedValue;
     }
 
+    #endregion
+    
+    
 }
