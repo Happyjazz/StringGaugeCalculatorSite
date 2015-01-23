@@ -15,6 +15,7 @@ public partial class StringCalc : System.Web.UI.Page
         if (!IsPostBack)
         {
             populateFrequencyDropdowns();
+            ResetFrequencyDropDowns();
         }
         
     }
@@ -22,13 +23,19 @@ public partial class StringCalc : System.Web.UI.Page
     #region Actions
     protected void buttonCalculate_Click(object sender, EventArgs e)
     {
-        float frequency = (float)Convert.ToDouble(txtStringFreq6.Text);
         float tension = (float)Convert.ToDouble(txtTension.Text);
         float scale = (float)Convert.ToDouble(txtScale.Text);
 
-        float unitWeight = CalculateUnitWeight(frequency, tension, scale);
-
-        txtUnitWeight6.Text = Convert.ToString(unitWeight);
+        txtUnitWeight6.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq6.Text), tension, scale));
+        txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scale));
+        txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scale));
+        txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scale));
+        txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scale));
+        txtUnitWeight1.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq1.Text), tension, scale));
+    }
+    protected void buttonReset_Click(object sender, EventArgs e)
+    {
+        ResetFrequencyDropDowns();
     }
     protected void ddString6_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -232,52 +239,61 @@ public partial class StringCalc : System.Web.UI.Page
         ddString6.DataTextField = "Note";
         ddString6.DataValueField = "Frequency";
         ddString6.DataBind();
-        ddString6.SelectedValue = "30,87";
-        txtStringFreq6.Enabled = false;
-        txtStringFreq6.Text = ddString6.SelectedValue;
 
         ddString5.DataSource = _frequenciesTable;
         ddString5.DataTextField = "Note";
         ddString5.DataValueField = "Frequency";
         ddString5.DataBind();
-        ddString5.SelectedValue = "41,2";
-        txtStringFreq5.Enabled = false;
-        txtStringFreq5.Text = ddString5.SelectedValue;
-
+        
         ddString4.DataSource = _frequenciesTable;
         ddString4.DataTextField = "Note";
         ddString4.DataValueField = "Frequency";
         ddString4.DataBind();
-        ddString4.SelectedValue = "55";
-        txtStringFreq4.Enabled = false;
-        txtStringFreq4.Text = ddString4.SelectedValue;
 
         ddString3.DataSource = _frequenciesTable;
         ddString3.DataTextField = "Note";
         ddString3.DataValueField = "Frequency";
         ddString3.DataBind();
-        ddString3.SelectedValue = "73,42";
-        txtStringFreq3.Enabled = false;
-        txtStringFreq3.Text = ddString3.SelectedValue;
-
+        
         ddString2.DataSource = _frequenciesTable;
         ddString2.DataTextField = "Note";
         ddString2.DataValueField = "Frequency";
         ddString2.DataBind();
-        ddString2.SelectedValue = "98";
-        txtStringFreq2.Enabled = false;
-        txtStringFreq2.Text = ddString2.SelectedValue;
-
+        
         ddString1.DataSource = _frequenciesTable;
         ddString1.DataTextField = "Note";
         ddString1.DataValueField = "Frequency";
         ddString1.DataBind();
+    }
+
+    void ResetFrequencyDropDowns()
+    {
+        ddString6.SelectedValue = "30,87";
+        txtStringFreq6.Enabled = false;
+        txtStringFreq6.Text = ddString6.SelectedValue;
+
+        ddString5.SelectedValue = "41,2";
+        txtStringFreq5.Enabled = false;
+        txtStringFreq5.Text = ddString5.SelectedValue;
+
+        ddString4.SelectedValue = "55";
+        txtStringFreq4.Enabled = false;
+        txtStringFreq4.Text = ddString4.SelectedValue;
+
+        ddString3.SelectedValue = "73,42";
+        txtStringFreq3.Enabled = false;
+        txtStringFreq3.Text = ddString3.SelectedValue;
+
+        ddString2.SelectedValue = "98";
+        txtStringFreq2.Enabled = false;
+        txtStringFreq2.Text = ddString2.SelectedValue;
+
         ddString1.SelectedValue = "130,81";
         txtStringFreq1.Enabled = false;
         txtStringFreq1.Text = ddString1.SelectedValue;
     }
-
     #endregion
-    
+
+
     
 }

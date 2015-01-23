@@ -57,6 +57,7 @@
             </div>
             <div id="buttons">
                 <asp:Button ID="buttonCalculate" runat="server" OnClick="buttonCalculate_Click" Text="Calculate" />
+                <asp:Button ID="buttonReset" runat="server" Text="Reset" OnClick="buttonReset_Click" />
             </div>
 
 
