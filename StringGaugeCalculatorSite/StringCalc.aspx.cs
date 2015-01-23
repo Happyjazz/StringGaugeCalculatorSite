@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 
 public partial class StringCalc : System.Web.UI.Page
 {
-    DataTable _frequenciesTable = new DataTable();
+    DataTable _frequenciesTable;
     
 
     protected void Page_Load(object sender, EventArgs e)
@@ -23,73 +23,24 @@ public partial class StringCalc : System.Web.UI.Page
             ResetNumberOfStrings();
             ResetUnitWeight();
         }
+
+        CalculateAllUnitWeights();
         
     }
 
-    #region Actions
+    #region Buttons
     protected void buttonCalculate_Click(object sender, EventArgs e)
     {
-        int numberOfStrings = 4;
-        if (txtStringFreq6.Visible && txtStringFreq1.Visible)
-        {
-            numberOfStrings = 6;
-        } else if (txtStringFreq6.Visible && !txtStringFreq1.Visible)
-        {
-            numberOfStrings = 5;
-        }
-
-        float tension = (float)Convert.ToDouble(txtTension.Text);
-        List<float> scales = new List<float>();
-
-        if (radioFannedFret.Checked && Convert.ToDouble(txtScale.Text) != Convert.ToDouble(TxtScaleMax.Text))
-        {
-            double interval = Convert.ToDouble(TxtScaleMax.Text) - Convert.ToDouble(txtScale.Text);
-            interval = interval/(numberOfStrings-1);
-
-            float scale = (float)Convert.ToDouble(TxtScaleMax.Text) + (float)interval;
-
-            for (int i = 0; i < numberOfStrings; i++)
-            {
-                scale -= (float) interval;
-                scales.Add(scale);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < numberOfStrings; i++)
-            {
-                scales.Add((float)Convert.ToDouble(txtScale.Text));
-            }
-        }
-
-        if (numberOfStrings == 4)
-        {
-            txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scales[0]));
-            txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scales[1]));
-            txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scales[2]));
-            txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scales[3]));
-        } else
-        {
-            txtUnitWeight6.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq6.Text), tension, scales[0]));
-            txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scales[1]));
-            txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scales[2]));
-            txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scales[3]));
-            txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scales[4]));
-            if (numberOfStrings == 6)
-            {
-                txtUnitWeight1.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq1.Text), tension, scales[5]));
-            }
-        }
-        
+        CalculateAllUnitWeights();
     }
     protected void buttonReset_Click(object sender, EventArgs e)
     {
         ResetFrequencyDropDowns();
         ResetTension();
         ResetUnitWeight();
-        //ResetNumberOfStrings();
-        //ResetScale();
     }
+    #endregion
+    #region Actions
     protected void radio4Strings_CheckedChanged(object sender, EventArgs e)
     {
         labelString6.Visible = false;
@@ -245,8 +196,66 @@ public partial class StringCalc : System.Web.UI.Page
     }
     #endregion
 
-
     #region Private Methods
+
+    int GetNumberOfStrings()
+    {
+        int numberOfStrings = 4;
+        if (txtStringFreq6.Visible && txtStringFreq1.Visible)
+        {
+            numberOfStrings = 6;
+        }
+        else if (txtStringFreq6.Visible && !txtStringFreq1.Visible)
+        {
+            numberOfStrings = 5;
+        }
+        return numberOfStrings;
+    }
+
+    Dictionary<TextBox, TextBox> GetPairsFreqUnitW()
+    {
+        Dictionary<TextBox, TextBox> textboxPairsFreqUnitW = new Dictionary<TextBox, TextBox>();
+        textboxPairsFreqUnitW.Add(txtStringFreq6, txtUnitWeight6);
+        textboxPairsFreqUnitW.Add(txtStringFreq5, txtUnitWeight5);
+        textboxPairsFreqUnitW.Add(txtStringFreq4, txtUnitWeight4);
+        textboxPairsFreqUnitW.Add(txtStringFreq3, txtUnitWeight3);
+        textboxPairsFreqUnitW.Add(txtStringFreq2, txtUnitWeight2);
+        textboxPairsFreqUnitW.Add(txtStringFreq1, txtUnitWeight1);
+        return textboxPairsFreqUnitW;
+    }
+    void CalculateAllUnitWeights()
+    {
+        Dictionary<TextBox, TextBox> textboxPairsFreqUnitW = GetPairsFreqUnitW();
+
+        float tension = (float)Convert.ToDouble(txtTension.Text);
+        
+        float scaleInterval = (float)Convert.ToDouble(TxtScaleMax.Text) - (float)Convert.ToDouble(txtScale.Text);
+        scaleInterval /= (GetNumberOfStrings() - 1);
+
+        float scale = (float)Convert.ToDouble(TxtScaleMax.Text) + scaleInterval;
+
+        foreach (var pair in textboxPairsFreqUnitW)
+        {
+            if (radioFannedFret.Checked)
+            {
+                if (pair.Key.Visible && pair.Value.Visible)
+                {
+                    scale -= scaleInterval;
+                    pair.Value.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(pair.Key.Text), tension, scale));
+                }
+            }
+            else
+            {
+                scale = (float)Convert.ToDouble(txtScale.Text);
+
+                if (pair.Key.Visible && pair.Value.Visible)
+                {
+                    pair.Value.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(pair.Key.Text), tension, scale));
+                }
+            }
+           
+        }
+    }
     //This methods calculates the Unit Weight from the values entered into Frequency, Tension and Scale
     float CalculateUnitWeight(float frequency, float tension, float scale)
     {
@@ -256,6 +265,8 @@ public partial class StringCalc : System.Web.UI.Page
 
     void PopulateFrequencyDropdowns()
     {
+        _frequenciesTable = new DataTable();
+
         _frequenciesTable.Columns.Add("Note");
         _frequenciesTable.Columns.Add("Frequency");
 
