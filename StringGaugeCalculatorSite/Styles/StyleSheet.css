@@ -1,0 +1,19 @@
+﻿body {
+}
+.ddStringFreq {
+    width: 110px;
+
+}
+.txtStringFreq {
+    width: 106px;
+}
+#wrapper {
+    background-color: beige;
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+.stringDiv {
+    /*float: left;*/
+}
