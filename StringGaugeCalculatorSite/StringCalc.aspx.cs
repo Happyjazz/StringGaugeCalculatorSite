@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -14,8 +15,10 @@ public partial class StringCalc : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            populateFrequencyDropdowns();
+            PopulateFrequencyDropdowns();
             ResetFrequencyDropDowns();
+            ResetTension();
+            ResetScale();
         }
         
     }
@@ -24,18 +27,60 @@ public partial class StringCalc : System.Web.UI.Page
     protected void buttonCalculate_Click(object sender, EventArgs e)
     {
         float tension = (float)Convert.ToDouble(txtTension.Text);
-        float scale = (float)Convert.ToDouble(txtScale.Text);
+        List<float> scales = new List<float>();
 
-        txtUnitWeight6.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq6.Text), tension, scale));
-        txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scale));
-        txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scale));
-        txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scale));
-        txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scale));
-        txtUnitWeight1.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq1.Text), tension, scale));
+        if (radioFannedFret.Checked)
+        {
+            double interval = Convert.ToDouble(TxtScaleMax.Text) - Convert.ToDouble(txtScale.Text);
+            interval = interval/5;
+
+            float scale = (float)Convert.ToDouble(TxtScaleMax.Text) + (float)interval;
+
+            for (int i = 0; i < 6; i++)
+            {
+                scales.Add(scale-(float)interval);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                scales.Add((float)Convert.ToDouble(txtScale.Text));
+            }
+        }
+
+        txtUnitWeight6.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq6.Text), tension, scales[0]));
+        txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scales[1]));
+        txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scales[2]));
+        txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scales[3]));
+        txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scales[4]));
+        txtUnitWeight1.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq1.Text), tension, scales[5]));
     }
     protected void buttonReset_Click(object sender, EventArgs e)
     {
         ResetFrequencyDropDowns();
+        ResetTension();
+    }
+    protected void radioFannedFret_CheckedChanged(object sender, EventArgs e)
+    {
+        TxtScaleMax.Visible = true;
+    }
+    protected void radioStandardScale_CheckedChanged(object sender, EventArgs e)
+    {
+        TxtScaleMax.Visible = false;
+    }
+
+    protected void ddTension_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToDouble(ddTension.SelectedValue) == 0)
+        {
+            txtTension.Enabled = true;
+        }
+        else
+        {
+            txtTension.Enabled = false;
+        }
+        txtTension.Text = Convert.ToString(ddTension.SelectedItem.Value);
     }
     protected void ddString6_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -120,7 +165,7 @@ public partial class StringCalc : System.Web.UI.Page
         return result;
     }
 
-    void populateFrequencyDropdowns()
+    void PopulateFrequencyDropdowns()
     {
         _frequenciesTable.Columns.Add("Note");
         _frequenciesTable.Columns.Add("Frequency");
@@ -174,66 +219,6 @@ public partial class StringCalc : System.Web.UI.Page
         _frequenciesTable.Rows.Add("220,00 Hz \tA3", "220");
         _frequenciesTable.Rows.Add("233,08 Hz \tA#3/Bb3 ", "233,08");
         _frequenciesTable.Rows.Add("246,94 Hz \tB3", "246,94");
-        _frequenciesTable.Rows.Add("261,63 Hz \tC4", "261,63");
-        _frequenciesTable.Rows.Add("277,18 Hz \tC#4/Db4 ", "277,18");
-        _frequenciesTable.Rows.Add("293,66 Hz \tD4", "293,66");
-        _frequenciesTable.Rows.Add("311,13 Hz \tD#4/Eb4 ", "311,13");
-        _frequenciesTable.Rows.Add("329,63 Hz \tE4", "329,63");
-        _frequenciesTable.Rows.Add("349,23 Hz \tF4", "349,23");
-        _frequenciesTable.Rows.Add("369,99 Hz \tF#4/Gb4 ", "369,99");
-        _frequenciesTable.Rows.Add("392,00 Hz \tG4", "392");
-        _frequenciesTable.Rows.Add("415,30 Hz \tG#4/Ab4 ", "415,3");
-        _frequenciesTable.Rows.Add("440,00 Hz \tA4", "440");
-        _frequenciesTable.Rows.Add("466,16 Hz \tA#4/Bb4 ", "466,16");
-        _frequenciesTable.Rows.Add("493,88 Hz \tB4", "493,88");
-        _frequenciesTable.Rows.Add("523,25 Hz \tC5", "523,25");
-        _frequenciesTable.Rows.Add("554,37 Hz \tC#5/Db5 ", "554,37");
-        _frequenciesTable.Rows.Add("587,33 Hz \tD5", "587,33");
-        _frequenciesTable.Rows.Add("622,25 Hz \tD#5/Eb5 ", "622,25");
-        _frequenciesTable.Rows.Add("659,25 Hz \tE5", "659,25");
-        _frequenciesTable.Rows.Add("698,46 Hz \tF5", "698,46");
-        _frequenciesTable.Rows.Add("739,99 Hz \tF#5/Gb5 ", "739,99");
-        _frequenciesTable.Rows.Add("783,99 Hz \tG5", "783,99");
-        _frequenciesTable.Rows.Add("830,61 Hz \tG#5/Ab5 ", "830,61");
-        _frequenciesTable.Rows.Add("880,00 Hz \tA5", "880");
-        _frequenciesTable.Rows.Add("932,33 Hz \tA#5/Bb5 ", "932,33");
-        _frequenciesTable.Rows.Add("987,77 Hz \tB5", "987,77");
-        _frequenciesTable.Rows.Add("1046,5 Hz \tC6", "1046,5");
-        _frequenciesTable.Rows.Add("1108,73 Hz \tC#6/Db6 ", "1108,73");
-        _frequenciesTable.Rows.Add("1174,66 Hz \tD6", "1174,66");
-        _frequenciesTable.Rows.Add("1244,51 Hz \tD#6/Eb6 ", "1244,51");
-        _frequenciesTable.Rows.Add("1318,51 Hz \tE6", "1318,51");
-        _frequenciesTable.Rows.Add("1396,91 Hz \tF6", "1396,91");
-        _frequenciesTable.Rows.Add("1479,98 Hz \tF#6/Gb6 ", "1479,98");
-        _frequenciesTable.Rows.Add("1567,98 Hz \tG6", "1567,98");
-        _frequenciesTable.Rows.Add("1661,22 Hz \tG#6/Ab6 ", "1661,22");
-        _frequenciesTable.Rows.Add("1760,00 Hz \tA6", "1760");
-        _frequenciesTable.Rows.Add("1864,66 Hz \tA#6/Bb6 ", "1864,66");
-        _frequenciesTable.Rows.Add("1975,53 Hz \tB6", "1975,53");
-        _frequenciesTable.Rows.Add("2093,00 Hz \tC7", "2093");
-        _frequenciesTable.Rows.Add("2217,46 Hz \tC#7/Db7 ", "2217,46");
-        _frequenciesTable.Rows.Add("2349,32 Hz \tD7", "2349,32");
-        _frequenciesTable.Rows.Add("2489,02 Hz \tD#7/Eb7 ", "2489,02");
-        _frequenciesTable.Rows.Add("2637,02 Hz \tE7", "2637,02");
-        _frequenciesTable.Rows.Add("2793,83 Hz \tF7", "2793,83");
-        _frequenciesTable.Rows.Add("2959,96 Hz \tF#7/Gb7 ", "2959,96");
-        _frequenciesTable.Rows.Add("3135,96 Hz \tG7", "3135,96");
-        _frequenciesTable.Rows.Add("3322,44 Hz \tG#7/Ab7 ", "3322,44");
-        _frequenciesTable.Rows.Add("3520,00 Hz \tA7", "3520");
-        _frequenciesTable.Rows.Add("3729,31 Hz \tA#7/Bb7 ", "3729,31");
-        _frequenciesTable.Rows.Add("3951,07 Hz \tB7", "3951,07");
-        _frequenciesTable.Rows.Add("4186,01 Hz \tC8", "4186,01");
-        _frequenciesTable.Rows.Add("4434,92 Hz \tC#8/Db8 ", "4434,92");
-        _frequenciesTable.Rows.Add("4698,63 Hz \tD8", "4698,63");
-        _frequenciesTable.Rows.Add("4978,03 Hz \tD#8/Eb8 ", "4978,03");
-        _frequenciesTable.Rows.Add("5274,04 Hz \tE8", "5274,04");
-        _frequenciesTable.Rows.Add("5587,65 Hz \tF8", "5587,65");
-        _frequenciesTable.Rows.Add("5919,91 Hz \tF#8/Gb8 ", "5919,91");
-        _frequenciesTable.Rows.Add("6271,93 Hz \tG8", "6271,93");
-        _frequenciesTable.Rows.Add("6644,88 Hz \tG#8/Ab8 ", "6644,88");
-        _frequenciesTable.Rows.Add("7040,00 Hz \tA8", "7040");
-        _frequenciesTable.Rows.Add("7458,62 Hz \tA#8/Bb8 ", "7458,62");
-        _frequenciesTable.Rows.Add("7902,13 Hz \tB8", "7902,13");
 
         ddString6.DataSource = _frequenciesTable;
         ddString6.DataTextField = "Note";
@@ -265,7 +250,8 @@ public partial class StringCalc : System.Web.UI.Page
         ddString1.DataValueField = "Frequency";
         ddString1.DataBind();
     }
-
+    #endregion
+    #region ResetMethods
     void ResetFrequencyDropDowns()
     {
         ddString6.SelectedValue = "30,87";
@@ -292,8 +278,19 @@ public partial class StringCalc : System.Web.UI.Page
         txtStringFreq1.Enabled = false;
         txtStringFreq1.Text = ddString1.SelectedValue;
     }
+
+    void ResetTension()
+    {
+        ddTension.SelectedValue = "40";
+        txtTension.Text = Convert.ToString(ddTension.SelectedItem.Value);
+        txtTension.Enabled = false;
+    }
+
+    void ResetScale()
+    {
+        radioStandardScale.Checked = true;
+        TxtScaleMax.Visible = false;
+    }
     #endregion
-
-
     
 }
