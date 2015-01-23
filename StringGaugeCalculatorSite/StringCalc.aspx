@@ -22,7 +22,6 @@
                 </asp:DropDownList>
                 <asp:TextBox ID="txtTension" runat="server">Tension in pounds</asp:TextBox>
             </div>
-            
             <div id="bassScale">
                 <asp:Label CssClass="leftLabels" ID="labelScale" Text="Scale" runat="server"></asp:Label>
                 <asp:RadioButton AutoPostBack="True" ID="radioStandardScale" Text="Standard" runat="server" GroupName="scaleType" Checked="True" OnCheckedChanged="radioStandardScale_CheckedChanged"/>
@@ -30,6 +29,12 @@
                 <br/>
                 <asp:TextBox ID="txtScale" runat="server">34</asp:TextBox>
                 <asp:TextBox ID="TxtScaleMax" runat="server" Visible="False">34</asp:TextBox>
+            </div>
+            <div id="bassStringCount">
+                <asp:Label CssClass="leftLabels" ID="labelStringCount" Text="Number of strings: " runat="server"></asp:Label>
+                <asp:RadioButton AutoPostBack="True" ID="radio4Strings" Text="4 Strings" GroupName="noStrings" runat="server" Checked="True" OnCheckedChanged="radio4Strings_CheckedChanged"/>
+                <asp:RadioButton AutoPostBack="True" ID="radio5Strings" Text="5 Strings" GroupName="noStrings" runat="server" OnCheckedChanged="radio5Strings_CheckedChanged"/>
+                <asp:RadioButton AutoPostBack="True" ID="radio6Strings" Text="6 Strings" GroupName="noStrings" runat="server" OnCheckedChanged="radio6Strings_CheckedChanged"/>
             </div>
             <hr/>
 

@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 public partial class StringCalc : System.Web.UI.Page
 {
     DataTable _frequenciesTable = new DataTable();
+    
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -19,6 +20,8 @@ public partial class StringCalc : System.Web.UI.Page
             ResetFrequencyDropDowns();
             ResetTension();
             ResetScale();
+            ResetNumberOfStrings();
+            ResetUnitWeight();
         }
         
     }
@@ -26,40 +29,120 @@ public partial class StringCalc : System.Web.UI.Page
     #region Actions
     protected void buttonCalculate_Click(object sender, EventArgs e)
     {
+        int numberOfStrings = 4;
+        if (txtStringFreq6.Visible && txtStringFreq1.Visible)
+        {
+            numberOfStrings = 6;
+        } else if (txtStringFreq6.Visible && !txtStringFreq1.Visible)
+        {
+            numberOfStrings = 5;
+        }
+
         float tension = (float)Convert.ToDouble(txtTension.Text);
         List<float> scales = new List<float>();
 
-        if (radioFannedFret.Checked)
+        if (radioFannedFret.Checked && Convert.ToDouble(txtScale.Text) != Convert.ToDouble(TxtScaleMax.Text))
         {
             double interval = Convert.ToDouble(TxtScaleMax.Text) - Convert.ToDouble(txtScale.Text);
-            interval = interval/5;
+            interval = interval/(numberOfStrings-1);
 
             float scale = (float)Convert.ToDouble(TxtScaleMax.Text) + (float)interval;
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < numberOfStrings; i++)
             {
-                scales.Add(scale-(float)interval);
+                scale -= (float) interval;
+                scales.Add(scale);
             }
         }
         else
         {
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < numberOfStrings; i++)
             {
                 scales.Add((float)Convert.ToDouble(txtScale.Text));
             }
         }
 
-        txtUnitWeight6.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq6.Text), tension, scales[0]));
-        txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scales[1]));
-        txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scales[2]));
-        txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scales[3]));
-        txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scales[4]));
-        txtUnitWeight1.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq1.Text), tension, scales[5]));
+        if (numberOfStrings == 4)
+        {
+            txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scales[0]));
+            txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scales[1]));
+            txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scales[2]));
+            txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scales[3]));
+        } else
+        {
+            txtUnitWeight6.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq6.Text), tension, scales[0]));
+            txtUnitWeight5.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq5.Text), tension, scales[1]));
+            txtUnitWeight4.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq4.Text), tension, scales[2]));
+            txtUnitWeight3.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq3.Text), tension, scales[3]));
+            txtUnitWeight2.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq2.Text), tension, scales[4]));
+            if (numberOfStrings == 6)
+            {
+                txtUnitWeight1.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(txtStringFreq1.Text), tension, scales[5]));
+            }
+        }
+        
     }
     protected void buttonReset_Click(object sender, EventArgs e)
     {
         ResetFrequencyDropDowns();
         ResetTension();
+        ResetUnitWeight();
+        //ResetNumberOfStrings();
+        //ResetScale();
+    }
+    protected void radio4Strings_CheckedChanged(object sender, EventArgs e)
+    {
+        labelString6.Visible = false;
+        ddString6.Visible = false;
+        txtStringFreq6.Visible = false;
+        txtUnitWeight6.Visible = false;
+
+        labelString1.Visible = false;
+        ddString1.Visible = false;
+        txtStringFreq1.Visible = false;
+        txtUnitWeight1.Visible = false;
+
+        labelString2.Text = "String 1";
+        labelString3.Text = "String 2";
+        labelString4.Text = "String 3";
+        labelString5.Text = "String 4";
+    }
+    protected void radio5Strings_CheckedChanged(object sender, EventArgs e)
+    {
+        labelString6.Visible = true;
+        ddString6.Visible = true;
+        txtStringFreq6.Visible = true;
+        txtUnitWeight6.Visible = true;
+
+        labelString1.Visible = false;
+        ddString1.Visible = false;
+        txtStringFreq1.Visible = false;
+        txtUnitWeight1.Visible = false;
+
+        labelString2.Text = "String 1";
+        labelString3.Text = "String 2";
+        labelString4.Text = "String 3";
+        labelString5.Text = "String 4";
+        labelString6.Text = "String 5";
+    }
+    protected void radio6Strings_CheckedChanged(object sender, EventArgs e)
+    {
+        labelString6.Visible = true;
+        ddString6.Visible = true;
+        txtStringFreq6.Visible = true;
+        txtUnitWeight6.Visible = true;
+
+        labelString1.Visible = true;
+        ddString1.Visible = true;
+        txtStringFreq1.Visible = true;
+        txtUnitWeight1.Visible = true;
+
+        labelString1.Text = "String 1";
+        labelString2.Text = "String 2";
+        labelString3.Text = "String 3";
+        labelString4.Text = "String 4";
+        labelString5.Text = "String 5";
+        labelString6.Text = "String 6";
     }
     protected void radioFannedFret_CheckedChanged(object sender, EventArgs e)
     {
@@ -93,6 +176,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq6.Enabled = false;
         }
         txtStringFreq6.Text = Convert.ToString(ddString6.SelectedItem.Value);
+        txtUnitWeight6.Text = "0";
     }
     protected void ddString5_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -105,6 +189,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq5.Enabled = false;
         }
         txtStringFreq5.Text = Convert.ToString(ddString5.SelectedItem.Value);
+        txtUnitWeight5.Text = "0";
     }
     protected void ddString4_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -117,6 +202,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq4.Enabled = false;
         }
         txtStringFreq4.Text = ddString4.SelectedValue;
+        txtUnitWeight4.Text = "0";
     }
     protected void ddString3_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -129,6 +215,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq3.Enabled = false;
         }
         txtStringFreq3.Text = ddString3.SelectedValue;
+        txtUnitWeight3.Text = "0";
     }
     protected void ddString2_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -141,6 +228,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq2.Enabled = false;
         }
         txtStringFreq2.Text = ddString2.SelectedValue;
+        txtUnitWeight2.Text = "0";
     }
     protected void ddString1_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -153,6 +241,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq1.Enabled = false;
         }
         txtStringFreq1.Text = ddString1.SelectedValue;
+        txtUnitWeight1.Text = "0";
     }
     #endregion
 
@@ -291,6 +380,37 @@ public partial class StringCalc : System.Web.UI.Page
         radioStandardScale.Checked = true;
         TxtScaleMax.Visible = false;
     }
+
+    void ResetNumberOfStrings()
+    {
+        radio4Strings.Checked = true;
+
+        labelString6.Visible = false;
+        ddString6.Visible = false;
+        txtStringFreq6.Visible = false;
+        txtUnitWeight6.Visible = false;
+
+        labelString1.Visible = false;
+        ddString1.Visible = false;
+        txtStringFreq1.Visible = false;
+        txtUnitWeight1.Visible = false;
+
+        labelString2.Text = "String 1";
+        labelString3.Text = "String 2";
+        labelString4.Text = "String 3";
+        labelString5.Text = "String 4";
+    }
+
+    void ResetUnitWeight()
+    {
+        txtUnitWeight1.Text = "0";
+        txtUnitWeight2.Text = "0";
+        txtUnitWeight3.Text = "0";
+        txtUnitWeight4.Text = "0";
+        txtUnitWeight5.Text = "0";
+        txtUnitWeight6.Text = "0";
+    }
     #endregion
+
     
 }
