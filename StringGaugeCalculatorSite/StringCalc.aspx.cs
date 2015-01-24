@@ -21,23 +21,22 @@ public partial class StringCalc : System.Web.UI.Page
             ResetTension();
             ResetScale();
             ResetNumberOfStrings();
-            ResetUnitWeight();
         }
 
-        CalculateAllUnitWeights();
+        UpdateUnitWeightAndGauge();
         
     }
 
     #region Buttons
     protected void buttonCalculate_Click(object sender, EventArgs e)
     {
-        CalculateAllUnitWeights();
+        UpdateUnitWeightAndGauge();
     }
     protected void buttonReset_Click(object sender, EventArgs e)
     {
         ResetFrequencyDropDowns();
         ResetTension();
-        ResetUnitWeight();
+        UpdateUnitWeightAndGauge();
     }
     #endregion
     #region Actions
@@ -47,16 +46,20 @@ public partial class StringCalc : System.Web.UI.Page
         ddString6.Visible = false;
         txtStringFreq6.Visible = false;
         txtUnitWeight6.Visible = false;
+        txtStringGauge6.Visible = false;
 
         labelString1.Visible = false;
         ddString1.Visible = false;
         txtStringFreq1.Visible = false;
         txtUnitWeight1.Visible = false;
+        txtStringGauge1.Visible = false;
 
         labelString2.Text = "String 1";
         labelString3.Text = "String 2";
         labelString4.Text = "String 3";
         labelString5.Text = "String 4";
+
+        UpdateUnitWeightAndGauge();
     }
     protected void radio5Strings_CheckedChanged(object sender, EventArgs e)
     {
@@ -64,17 +67,21 @@ public partial class StringCalc : System.Web.UI.Page
         ddString6.Visible = true;
         txtStringFreq6.Visible = true;
         txtUnitWeight6.Visible = true;
+        txtStringGauge6.Visible = true;
 
         labelString1.Visible = false;
         ddString1.Visible = false;
         txtStringFreq1.Visible = false;
         txtUnitWeight1.Visible = false;
+        txtStringGauge1.Visible = false;
 
         labelString2.Text = "String 1";
         labelString3.Text = "String 2";
         labelString4.Text = "String 3";
         labelString5.Text = "String 4";
         labelString6.Text = "String 5";
+
+        UpdateUnitWeightAndGauge();
     }
     protected void radio6Strings_CheckedChanged(object sender, EventArgs e)
     {
@@ -82,11 +89,13 @@ public partial class StringCalc : System.Web.UI.Page
         ddString6.Visible = true;
         txtStringFreq6.Visible = true;
         txtUnitWeight6.Visible = true;
+        txtStringGauge6.Visible = true;
 
         labelString1.Visible = true;
         ddString1.Visible = true;
         txtStringFreq1.Visible = true;
         txtUnitWeight1.Visible = true;
+        txtStringGauge1.Visible = true;
 
         labelString1.Text = "String 1";
         labelString2.Text = "String 2";
@@ -94,14 +103,18 @@ public partial class StringCalc : System.Web.UI.Page
         labelString4.Text = "String 4";
         labelString5.Text = "String 5";
         labelString6.Text = "String 6";
+
+        UpdateUnitWeightAndGauge();
     }
     protected void radioFannedFret_CheckedChanged(object sender, EventArgs e)
     {
         TxtScaleMax.Visible = true;
+        UpdateUnitWeightAndGauge();
     }
     protected void radioStandardScale_CheckedChanged(object sender, EventArgs e)
     {
         TxtScaleMax.Visible = false;
+        UpdateUnitWeightAndGauge();
     }
 
     protected void ddTension_SelectedIndexChanged(object sender, EventArgs e)
@@ -115,6 +128,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtTension.Enabled = false;
         }
         txtTension.Text = Convert.ToString(ddTension.SelectedItem.Value);
+        UpdateUnitWeightAndGauge();
     }
     protected void ddString6_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -127,7 +141,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq6.Enabled = false;
         }
         txtStringFreq6.Text = Convert.ToString(ddString6.SelectedItem.Value);
-        txtUnitWeight6.Text = "0";
+        UpdateUnitWeightAndGauge();
     }
     protected void ddString5_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -140,7 +154,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq5.Enabled = false;
         }
         txtStringFreq5.Text = Convert.ToString(ddString5.SelectedItem.Value);
-        txtUnitWeight5.Text = "0";
+        UpdateUnitWeightAndGauge();
     }
     protected void ddString4_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -153,7 +167,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq4.Enabled = false;
         }
         txtStringFreq4.Text = ddString4.SelectedValue;
-        txtUnitWeight4.Text = "0";
+        UpdateUnitWeightAndGauge();
     }
     protected void ddString3_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -166,7 +180,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq3.Enabled = false;
         }
         txtStringFreq3.Text = ddString3.SelectedValue;
-        txtUnitWeight3.Text = "0";
+        UpdateUnitWeightAndGauge();
     }
     protected void ddString2_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -179,7 +193,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq2.Enabled = false;
         }
         txtStringFreq2.Text = ddString2.SelectedValue;
-        txtUnitWeight2.Text = "0";
+        UpdateUnitWeightAndGauge();
     }
     protected void ddString1_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -192,7 +206,7 @@ public partial class StringCalc : System.Web.UI.Page
             txtStringFreq1.Enabled = false;
         }
         txtStringFreq1.Text = ddString1.SelectedValue;
-        txtUnitWeight1.Text = "0";
+        UpdateUnitWeightAndGauge();
     }
     #endregion
 
@@ -223,7 +237,37 @@ public partial class StringCalc : System.Web.UI.Page
         textboxPairsFreqUnitW.Add(txtStringFreq1, txtUnitWeight1);
         return textboxPairsFreqUnitW;
     }
-    void CalculateAllUnitWeights()
+    Dictionary<TextBox, TextBox> GetPairsUnitWGauge()
+    {
+        Dictionary<TextBox, TextBox> textboxPairsUnitWGauge = new Dictionary<TextBox, TextBox>();
+        textboxPairsUnitWGauge.Add(txtUnitWeight6, txtStringGauge6);
+        textboxPairsUnitWGauge.Add(txtUnitWeight5, txtStringGauge5);
+        textboxPairsUnitWGauge.Add(txtUnitWeight4, txtStringGauge4);
+        textboxPairsUnitWGauge.Add(txtUnitWeight3, txtStringGauge3);
+        textboxPairsUnitWGauge.Add(txtUnitWeight2, txtStringGauge2);
+        textboxPairsUnitWGauge.Add(txtUnitWeight1, txtStringGauge1);
+        return textboxPairsUnitWGauge;
+    }
+
+    void UpdateUnitWeightAndGauge()
+    {
+        CalculateAllUnitWeights();
+        CalculateAllStringGauges();
+    }
+    void CalculateAllStringGauges()
+    {
+        Dictionary<TextBox, TextBox> textboxPairsUnitWGauge = GetPairsUnitWGauge();
+
+        foreach (var pair in textboxPairsUnitWGauge)
+        {
+            if (!String.IsNullOrWhiteSpace(pair.Key.Text))
+            {
+                float temp = (float)Convert.ToDouble(pair.Key.Text);
+                pair.Value.Text = GetCircleKStringGauge(temp);
+            }
+        }
+    }
+    void CalculateAllUnitWeights()  
     {
         Dictionary<TextBox, TextBox> textboxPairsFreqUnitW = GetPairsFreqUnitW();
 
@@ -253,9 +297,9 @@ public partial class StringCalc : System.Web.UI.Page
                     pair.Value.Text = Convert.ToString(CalculateUnitWeight((float)Convert.ToDouble(pair.Key.Text), tension, scale));
                 }
             }
-           
         }
     }
+
     //This methods calculates the Unit Weight from the values entered into Frequency, Tension and Scale
     float CalculateUnitWeight(float frequency, float tension, float scale)
     {
@@ -400,11 +444,13 @@ public partial class StringCalc : System.Web.UI.Page
         ddString6.Visible = false;
         txtStringFreq6.Visible = false;
         txtUnitWeight6.Visible = false;
+        txtStringGauge6.Visible = false;
 
         labelString1.Visible = false;
         ddString1.Visible = false;
         txtStringFreq1.Visible = false;
         txtUnitWeight1.Visible = false;
+        txtStringGauge1.Visible = false;
 
         labelString2.Text = "String 1";
         labelString3.Text = "String 2";
@@ -412,16 +458,94 @@ public partial class StringCalc : System.Web.UI.Page
         labelString5.Text = "String 4";
     }
 
-    void ResetUnitWeight()
+    string GetCircleKStringGauge(float unitWeight)
     {
-        txtUnitWeight1.Text = "0";
-        txtUnitWeight2.Text = "0";
-        txtUnitWeight3.Text = "0";
-        txtUnitWeight4.Text = "0";
-        txtUnitWeight5.Text = "0";
-        txtUnitWeight6.Text = "0";
+        string StringGauge = null;
+
+        DataTable circleKTable = new DataTable();
+
+        circleKTable.Columns.Add("Size");
+        circleKTable.Columns.Add("UnitWeight");
+
+        circleKTable.Rows.Add(".008 - Plain Bass String", "0,00001424");
+        circleKTable.Rows.Add(".009 - Plain Bass String", "0,000018022");
+        circleKTable.Rows.Add(".010 - Plain Bass String", "0,000022252");
+        circleKTable.Rows.Add(".011 - Plain Bass String", "0,000026925");
+        circleKTable.Rows.Add(".012 - Plain Bass String", "0,000032039");
+        circleKTable.Rows.Add(".013 - Plain Bass String", "0,000037605");
+        circleKTable.Rows.Add(".014 - Plain Bass String", "0,000043607");
+        circleKTable.Rows.Add(".015 - Plain Bass String", "0,00005005");
+        circleKTable.Rows.Add(".016 - Plain Bass String", "0,000056961");
+        circleKTable.Rows.Add(".017 - Plain Bass String", "0,0000643");
+        circleKTable.Rows.Add(".018 - Plain Bass String", "0,000072088");
+        circleKTable.Rows.Add(".019 - Plain Bass String", "0,00008036");
+        circleKTable.Rows.Add(".020 - Plain Bass String", "0,000089031");
+        circleKTable.Rows.Add(".021 - Plain Bass String", "0,000098155");
+        circleKTable.Rows.Add(".022 - Plain Bass String", "0,000107666");
+        circleKTable.Rows.Add(".023 - Plain Bass String", "0,000117702");
+        circleKTable.Rows.Add(".025 - Wound Nickel/Steel Hybrid Bass String", "0,000136054");
+        circleKTable.Rows.Add(".026 - Wound Nickel/Steel Hybrid Bass String", "0,000144691");
+        circleKTable.Rows.Add(".027 - Wound Nickel/Steel Hybrid Bass String", "0,000153146");
+        circleKTable.Rows.Add(".028 - Wound Nickel/Steel Hybrid Bass String", "0,000161203");
+        circleKTable.Rows.Add(".029 - Wound Nickel/Steel Hybrid Bass String", "0,000178551");
+        circleKTable.Rows.Add(".031 - Wound Nickel/Steel Hybrid Bass String", "0,000198902");
+        circleKTable.Rows.Add(".033 - Wound Nickel/Steel Hybrid Bass String", "0,000223217");
+        circleKTable.Rows.Add(".035 - Wound Nickel/Steel Hybrid Bass String", "0,000249034");
+        circleKTable.Rows.Add(".037 - Wound Nickel/Steel Hybrid Bass String", "0,000276237");
+        circleKTable.Rows.Add(".039 - Wound Nickel/Steel Hybrid Bass String", "0,000304788");
+        circleKTable.Rows.Add(".041 - Wound Nickel/Steel Hybrid Bass String", "0,000334965");
+        circleKTable.Rows.Add(".043 - Wound Nickel/Steel Hybrid Bass String", "0,000366357");
+        circleKTable.Rows.Add(".045 - Wound Nickel/Steel Hybrid Bass String", "0,000404956");
+        circleKTable.Rows.Add(".047 - Wound Nickel/Steel Hybrid Bass String", "0,000447408");
+        circleKTable.Rows.Add(".049 - Wound Nickel/Steel Hybrid Bass String", "0,000475438");
+        circleKTable.Rows.Add(".051 - Wound Nickel/Steel Hybrid Bass String", "0,000512645");
+        circleKTable.Rows.Add(".053 - Wound Nickel/Steel Hybrid Bass String", "0,000551898");
+        circleKTable.Rows.Add(".055 - Wound Nickel/Steel Hybrid Bass String", "0,000584407");
+        circleKTable.Rows.Add(".057 - Wound Nickel/Steel Hybrid Bass String", "0,000625704");
+        circleKTable.Rows.Add(".059 - Wound Nickel/Steel Hybrid Bass String", "0,000679149");
+        circleKTable.Rows.Add(".061 - Wound Nickel/Steel Hybrid Bass String", "0,000720293");
+        circleKTable.Rows.Add(".063 - Wound Nickel/Steel Hybrid Bass String", "0,000765973");
+        circleKTable.Rows.Add(".065 - Wound Nickel/Steel Hybrid Bass String", "0,000821116");
+        circleKTable.Rows.Add(".067 - Wound Nickel/Steel Hybrid Bass String", "0,000870707");
+        circleKTable.Rows.Add(".070 - Wound Nickel/Steel Hybrid Bass String", "0,000939851");
+        circleKTable.Rows.Add(".073 - Wound Nickel/Steel Hybrid Bass String", "0,001021518");
+        circleKTable.Rows.Add(".076 - Wound Nickel/Steel Hybrid Bass String", "0,001110192");
+        circleKTable.Rows.Add(".079 - Wound Nickel/Steel Hybrid Bass String", "0,001188974");
+        circleKTable.Rows.Add(".082 - Wound Nickel/Steel Hybrid Bass String", "0,001293598");
+        circleKTable.Rows.Add(".086 - Wound Nickel/Steel Hybrid Bass String", "0,001416131");
+        circleKTable.Rows.Add(".090 - Wound Nickel/Steel Hybrid Bass String", "0,001544107");
+        circleKTable.Rows.Add(".094 - Wound Nickel/Steel Hybrid Bass String", "0,001677765");
+        circleKTable.Rows.Add(".098 - Wound Nickel/Steel Hybrid Bass String", "0,001831487");
+        circleKTable.Rows.Add(".102 - Wound Nickel/Steel Hybrid Bass String", "0,001986524");
+        circleKTable.Rows.Add(".106 - Wound Nickel/Steel Hybrid Bass String", "0,002127413");
+        circleKTable.Rows.Add(".112 - Wound Nickel/Steel Hybrid Bass String", "0,002367064");
+        circleKTable.Rows.Add(".118 - Wound Nickel/Steel Hybrid Bass String", "0,002616406");
+        circleKTable.Rows.Add(".124 - Wound Nickel/Steel Hybrid Bass String", "0,002880915");
+        circleKTable.Rows.Add(".130 - Wound Nickel/Steel Hybrid Bass String", "0,003154996");
+        circleKTable.Rows.Add(".136 - Wound Nickel/Steel Hybrid Bass String", "0,003441822");
+        circleKTable.Rows.Add(".142 - Wound Nickel/Steel Hybrid Bass String", "0,003741715");
+        circleKTable.Rows.Add(".150 - Wound Nickel/Steel Hybrid Bass String", "0,004051506");
+        circleKTable.Rows.Add(".158 - Wound Nickel/Steel Hybrid Bass String", "0,004375389");
+        circleKTable.Rows.Add(".166 - Wound Nickel/Steel Hybrid Bass String", "0,005078724");
+        circleKTable.Rows.Add(".174 - Wound Nickel/Steel Hybrid Bass String", "0,005469937");
+        circleKTable.Rows.Add(".182 - Wound Nickel/Steel Hybrid Bass String", "0,006071822");
+        circleKTable.Rows.Add(".190 - Wound Nickel/Steel Hybrid Bass String", "0,006605072");
+        circleKTable.Rows.Add(".200 - Wound Nickel/Steel Hybrid Bass String", "0,007311717");
+        circleKTable.Rows.Add(".210 - Wound Nickel/Steel Hybrid Bass String", "0,008037439");
+        circleKTable.Rows.Add(".222 - Wound Nickel/Steel Hybrid Bass String", "0,009091287");
+        circleKTable.Rows.Add(".232 - Wound Nickel/Steel Hybrid Bass String", "0,009888443");
+        circleKTable.Rows.Add(".244 - Wound Nickel/Steel Hybrid Bass String", "0,010907182");
+        circleKTable.Rows.Add(".254 - Wound Nickel/Steel Hybrid Bass String", "0,011787319");
+
+        var closest =
+            circleKTable.Select()
+                .OrderBy(dr => Math.Abs(Convert.ToDouble(dr["UnitWeight"]) - unitWeight))
+                .FirstOrDefault();
+
+        StringGauge = (string)closest["Size"];
+
+        return StringGauge;
     }
     #endregion
 
-    
 }

@@ -27,8 +27,8 @@
                 <asp:RadioButton AutoPostBack="True" ID="radioStandardScale" Text="Standard" runat="server" GroupName="scaleType" Checked="True" OnCheckedChanged="radioStandardScale_CheckedChanged"/>
                 <asp:RadioButton AutoPostBack="True" ID="radioFannedFret" Text="Fanned frets" runat="server" GroupName="scaleType" OnCheckedChanged="radioFannedFret_CheckedChanged"/>
                 <br/>
-                <asp:TextBox ID="txtScale" runat="server">34</asp:TextBox>
-                <asp:TextBox ID="TxtScaleMax" runat="server" Visible="False">34</asp:TextBox>
+                <asp:TextBox ID="txtScale" runat="server" >34</asp:TextBox>
+                <asp:TextBox ID="TxtScaleMax" runat="server" Visible="False" >34</asp:TextBox>
             </div>
             <div id="bassStringCount">
                 <asp:Label CssClass="leftLabels" ID="labelStringCount" Text="Number of strings: " runat="server"></asp:Label>
@@ -43,37 +43,43 @@
                     <asp:Label CssClass="leftLabels" ID="labelString6" runat="server">String 6</asp:Label>
                     <asp:DropDownList CssClass="ddStringFreq" AutoPostBack="True" ID="ddString6" runat="server" OnSelectedIndexChanged="ddString6_SelectedIndexChanged" />
                     <asp:TextBox CssClass="txtStringFreq" ID="txtStringFreq6" runat="server">Frequenzy in Mhz</asp:TextBox>
-                    <asp:TextBox CssClass="txtStringFreq" ID="txtUnitWeight6" runat="server">Unit Weight</asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Enabled="False" ID="txtUnitWeight6" runat="server"></asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Width="273px" Enabled="False" ID="txtStringGauge6" runat="server"></asp:TextBox>
                 </div>
                 <div class="stringDiv">
                     <asp:Label CssClass="leftLabels" ID="labelString5" runat="server">String 5</asp:Label>
                     <asp:DropDownList CssClass="ddStringFreq" AutoPostBack="True" ID="ddString5" runat="server" OnSelectedIndexChanged="ddString5_SelectedIndexChanged" />
                     <asp:TextBox CssClass="txtStringFreq" ID="txtStringFreq5" runat="server">Frequenzy in Mhz</asp:TextBox>
-                    <asp:TextBox CssClass="txtStringFreq" ID="txtUnitWeight5" runat="server">Unit Weight</asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Enabled="False" ID="txtUnitWeight5" runat="server"></asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Width="273px" Enabled="False" ID="txtStringGauge5" runat="server"></asp:TextBox>
                 </div>
                 <div class="stringDiv">
                     <asp:Label CssClass="leftLabels" ID="labelString4" runat="server">String 4</asp:Label>
                     <asp:DropDownList CssClass="ddStringFreq" AutoPostBack="True" ID="ddString4" runat="server" OnSelectedIndexChanged="ddString4_SelectedIndexChanged" />
                     <asp:TextBox CssClass="txtStringFreq" ID="txtStringFreq4" runat="server">Frequenzy in Mhz</asp:TextBox>
-                    <asp:TextBox CssClass="txtStringFreq" ID="txtUnitWeight4" runat="server">Unit Weight</asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Enabled="False" ID="txtUnitWeight4" runat="server"></asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Width="273px" Enabled="False" ID="txtStringGauge4" runat="server"></asp:TextBox>
                 </div>
                 <div class="stringDiv">
                     <asp:Label CssClass="leftLabels" ID="labelString3" runat="server">String 3</asp:Label>
                     <asp:DropDownList CssClass="ddStringFreq" AutoPostBack="True" ID="ddString3" runat="server" OnSelectedIndexChanged="ddString3_SelectedIndexChanged" />
                     <asp:TextBox CssClass="txtStringFreq" ID="txtStringFreq3" runat="server">Frequenzy in Mhz</asp:TextBox>
-                    <asp:TextBox CssClass="txtStringFreq" ID="txtUnitWeight3" runat="server">Unit Weight</asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Enabled="False" ID="txtUnitWeight3" runat="server"></asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Width="273px" Enabled="False" ID="txtStringGauge3" runat="server"></asp:TextBox>
                 </div>
                 <div class="stringDiv">
                     <asp:Label CssClass="leftLabels" ID="labelString2" runat="server">String 2</asp:Label>
                     <asp:DropDownList CssClass="ddStringFreq" AutoPostBack="True" ID="ddString2" runat="server" OnSelectedIndexChanged="ddString2_SelectedIndexChanged" />
                     <asp:TextBox CssClass="txtStringFreq" ID="txtStringFreq2" runat="server">Frequenzy in Mhz</asp:TextBox>
-                    <asp:TextBox CssClass="txtStringFreq" ID="txtUnitWeight2" runat="server">Unit Weight</asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Enabled="False" ID="txtUnitWeight2" runat="server"></asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Width="273px" Enabled="False" ID="txtStringGauge2" runat="server"></asp:TextBox>
                 </div>
                 <div class="stringDiv">
                     <asp:Label CssClass="leftLabels" ID="labelString1" runat="server">String 1</asp:Label>
                     <asp:DropDownList CssClass="ddStringFreq" AutoPostBack="True" ID="ddString1" runat="server" OnSelectedIndexChanged="ddString1_SelectedIndexChanged" />
                     <asp:TextBox CssClass="txtStringFreq" ID="txtStringFreq1" runat="server">Frequenzy in Mhz</asp:TextBox>
-                    <asp:TextBox CssClass="txtStringFreq" ID="txtUnitWeight1" runat="server">Unit Weight</asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Enabled="False" ID="txtUnitWeight1" runat="server"></asp:TextBox>
+                    <asp:TextBox CssClass="txtStringFreq" Width="273px" Enabled="False" ID="txtStringGauge1" runat="server"></asp:TextBox>
                 </div>
             </div>
             <div id="buttons">
